@@ -1,0 +1,61 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux8Way16.hdl
+
+/**
+ * 8-way 16-bit multiplexor:
+ *    firstMux16 
+ *       a if sel == 000
+ *       h if sel == 111
+
+ *    secondMux16 
+ *       b if sel == 001
+ *       e if sel == 100
+
+ *    thirdMux16 
+ *       c if sel == 010
+ *       f if sel == 101
+
+ *    fourthMux16 
+ *       d if sel == 011
+ *       g if sel == 110
+
+ */
+
+CHIP Mux8Way16 {
+    IN a[16], b[16], c[16], d[16],
+       e[16], f[16], g[16], h[16],
+       sel[3];
+    OUT out[16];
+
+    PARTS:
+      Not(in = sel[0], out = notSel0);
+      Not(in = sel[1], out = notSel1);
+      Not(in = sel[2], out = notSel2);
+
+      And(a = sel[0], b = sel[1], out = sel11Right);
+      And(a = sel[1], b = sel[2], out = sel11Left);
+      And(a = sel11Right, b = sel[2], out = sel111);
+
+      And(a = notSel0, b = notSel1, out = sel00Right);
+      And(a = notSel1, b = notSel2, out = sel00Left);
+      And(a = sel00Right, b = notSel2, out = sel000);
+      
+      Or(a = sel000, b = sel111, out = euqal3Bits);
+
+      Mux16(a = a, b = h, sel = sel111, out = firstMux16);
+      Mux16(a = e, b = b, sel = sel00Left, out = secondMux16);
+      Mux16(a = f, b = c, sel = sel[1], out = thirdMux16);
+      Mux16(a = g, b = d, sel = sel11Right, out = fourthMux16);
+
+      Or(a = sel00Left, b = sel00Right, out = secondMuxSel);
+
+      Mux16(a = fourthMux16, b = firstMux16, sel = euqal3Bits, out = firstMux);
+      Mux16(a = thirdMux16, b = secondMux16, sel = secondMuxSel, out = secondMux);
+
+      Or(a = sel11Left, b = sel11Right, out = fourthMux);
+      Or(a = fourthMux, b = euqal3Bits, out = firstPairSel);
+
+      Mux16(a = secondMux, b = firstMux, sel = firstPairSel, out = out);
+}
