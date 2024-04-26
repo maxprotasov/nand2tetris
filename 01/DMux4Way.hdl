@@ -22,7 +22,8 @@ CHIP DMux4Way {
 }
 
 
-/**   Not(in = sel[0], out = notSel0);
+/** first realisation
+      Not(in = sel[0], out = notSel0);
       Not(in = sel[1], out = notSel1);
 
       And(a = sel[0], b = sel[1], out = sel11);
