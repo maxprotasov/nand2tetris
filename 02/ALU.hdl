@@ -42,10 +42,6 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-<<<<<<< Updated upstream
-   // Put you code here:
-}
-=======
     Not16(in[0..15] = true, out = zero);
 
     Mux16(a = x, b = zero, sel = zx, out = xBitOne);
@@ -71,4 +67,10 @@ CHIP ALU {
     Or(a = firstBits, b = lastBits, out = zrAny);
     Not(in = zrAny, out = zr);
 }
->>>>>>> Stashed changes
+
+/**
+    Inc16(in = y, out = incX);
+    Inc16(in = x, out = incY);
+
+    Inc16(in = zero, out = one);
+*/
