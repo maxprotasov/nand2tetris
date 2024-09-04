@@ -42,5 +42,33 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
+<<<<<<< Updated upstream
    // Put you code here:
 }
+=======
+    Not16(in[0..15] = true, out = zero);
+
+    Mux16(a = x, b = zero, sel = zx, out = xBitOne);
+    Mux16(a = y, b = zero, sel = zy, out = yBitOne);
+
+    Not16(in = xBitOne, out = notX);
+    Not16(in = yBitOne, out = notY);
+
+    Mux16(a = xBitOne, b = notX, sel = nx, out = xBitTwo);
+    Mux16(a = yBitOne, b = notY, sel = ny, out = yBitTwo);
+
+    Add16(a = xBitTwo, b = yBitTwo, out = sumXY);
+    And16(a = xBitTwo, b = yBitTwo, out = andXY);
+
+    Mux16(a = andXY, b = sumXY, sel = f, out = fOut);
+
+    Not16(in = fOut, out = noOut);
+    Mux16(a = fOut, b = noOut, sel = no, out[15] = ng, out[0..7] = first8Bits, out[8..15] = second8Bits, out = out);
+
+    Or8Way(in = first8Bits, out = firstBits);
+    Or8Way(in = second8Bits, out = lastBits);
+
+    Or(a = firstBits, b = lastBits, out = zrAny);
+    Not(in = zrAny, out = zr);
+}
+>>>>>>> Stashed changes
